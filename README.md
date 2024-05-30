@@ -8,3 +8,6 @@ B站视频：https://www.bilibili.com/video/BV11Z4y1c7so/?p=23&spm_id_from=pageD
 <br>
 视频代码仓库: https://github.com/yocover/start-learning-opengl
 <br>
+
+我使用的是Windows+Wsl虚拟机的方式配置liunx的opengl开发环境，使用opengl3.3版本
+
