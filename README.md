@@ -1,2 +1,8 @@
 # MYOPENGL
 opengl的学习路线
+
+1.基础部分
+
+B站视频：https://www.bilibili.com/video/BV11Z4y1c7so/?p=23&spm_id_from=pageDriver&vd_source=f3a0c597d5c1cd4bfb61733f60f165a3
+参考文档地址: https://learnopengl-cn.github.io/intro/
+视频代码仓库: https://github.com/yocover/start-learning-opengl
