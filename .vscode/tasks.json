@@ -13,7 +13,7 @@
                 "-I/MYOPENGL/", //在此处可以配置include的路径
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "glad.c","-lGL","-lGLU","-lglut","-ldl","-Iglad/include",
+                "../include/glad.c","-lGL","-lGLU","-lglut","-ldl","-Iglad/include",
                 "-lGLEW", "-lglfw", "-lGL","-lX11", "-lpthread","-lXrandr"
             ],
             "options": {
