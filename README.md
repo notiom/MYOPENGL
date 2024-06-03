@@ -35,3 +35,7 @@ B站视频：https://www.bilibili.com/video/BV11Z4y1c7so/?p=23&spm_id_from=pageD
 |--......
 ```
 源码主要存放于src文件夹中，glsl里放着色器的代码
+
+OPENGL函数说明链接：https://docs.gl
+模板链接：threejs.org
+
