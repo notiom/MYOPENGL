@@ -17,21 +17,23 @@ B站视频：https://www.bilibili.com/video/BV11Z4y1c7so/?p=23&spm_id_from=pageD
 ```
 |.vscode
 |MYOPENGL/
-|--img/
-|    |--...
-|    |--container.jpg
-|--shader/
-|    |--hello.glsl
-|    |--...
 |--include/
-|    |--glad.c
-|    |--stb_image.h
+|    |--glm
+|    |    |--...
 |    |--shader.h
-|    |--...
+|    |--stb_image.h
+|    |--glad.c
 |--src/
-|    |--main.cpp
-|    |--shader.cpp
+|    |--01
+|    |    |--shader
+|    |    |     |--glsl文件
+|    |    |--img
+|    |    |    |--jpg或者png等图片
+|    |    |--main.cpp
+|    |--02
 |    |--...
+|--BUILD
+|--WORKSPACE
 |--......
 ```
 源码主要存放于src文件夹中，glsl里放着色器的代码
@@ -43,5 +45,11 @@ OPENGL函数说明链接：https://docs.gl
 
 ### 后续问题解决
 由于函数很多，想将其放到不同的文件夹下，但又想从文件最一开始根目录打开，此时涉及到编译方式，选择bazel用来编译单个文件夹
+
+### 编译命令
+
+```bash
+bazel build //:main --define folder=02_load_texture
+```
 
 
