@@ -47,9 +47,14 @@ OPENGL函数说明链接：https://docs.gl
 由于函数很多，想将其放到不同的文件夹下，但又想从文件最一开始根目录打开，此时涉及到编译方式，选择bazel用来编译单个文件夹
 
 ### 编译命令
-
+进入到含有BUILD文件的根目录，运行->
 ```bash
 bazel build //:main --define folder=02_load_texture
+```
+
+### 执行命令
+```bash
+./src/02_load_texture/main
 ```
 
 
