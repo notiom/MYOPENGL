@@ -13,7 +13,7 @@ config_setting(
 
 config_setting(
     name = "use_folder3",
-    define_values = {"folder": "03_transfrom"},
+    define_values = {"folder": "03_transform"},
 )
 
 # Define the glad library
@@ -31,7 +31,7 @@ cc_binary(
     srcs = select({
         ":use_folder1": glob(["src/01_hello_triangle/*.cpp"]),
         ":use_folder2": glob(["src/02_load_texture/*.cpp"]),
-        ":use_folder3": glob(["src/03_transfrom/*.cpp"]),
+        ":use_folder3": glob(["src/03_transform/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":glad"],
