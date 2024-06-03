@@ -13,12 +13,17 @@ config_setting(
 
 config_setting(
     name = "use_folder3",
-    define_values = {"folder": "03_transform"},
+    define_values = {"folder": "03_transfrom"},
+)
+
+config_setting(
+    name = "use_folder4",
+    define_values = {"folder": "04_use_plane_geometry"},
 )
 
 # Define the glad library
 cc_library(
-    name = "glad",
+    name = "lib",
     srcs = ["include/glad.c"],
     hdrs = glob(["include/*.h"]),
     includes = ["include"],  # This makes sure #include <glad/glad.h> works
@@ -31,12 +36,13 @@ cc_binary(
     srcs = select({
         ":use_folder1": glob(["src/01_hello_triangle/*.cpp"]),
         ":use_folder2": glob(["src/02_load_texture/*.cpp"]),
-        ":use_folder3": glob(["src/03_transform/*.cpp"]),
+        ":use_folder3": glob(["src/03_transfrom/*.cpp"]),
+        ":use_folder4": glob(["src/04_use_plane_geometry/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
-    deps = [":glad"],
+    deps = [":lib"],
     copts = [
-        "-Iinclude",  # Include the "include" directory for glad
+        "-Iinclude",  # Include the "include" directory for glad and geometry
         "-I/usr/local/include",  # Include system path for glfw
         "-fdiagnostics-color=always",
     ],
