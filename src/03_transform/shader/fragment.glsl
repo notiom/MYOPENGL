@@ -7,6 +7,7 @@ in vec2 TexCoord;
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform float mixPercent;
+
 void main() {
   // float xy = length(ourPos.xy);
   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), mixPercent);

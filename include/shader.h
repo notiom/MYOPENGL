@@ -14,14 +14,14 @@ public:
     //程序id
     GLuint Program;
     //构造函数
-    Shader(const GLchar* vertexPath,const GLchar* fragmentPath);
+    Shader(const std::string& vertexPath,const std::string& fragmentPath);
     //使用程序
     void Use();
 };
 
 #include "include/shader.h"
 
-Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
+Shader::Shader(const std::string& vertexPath,const std::string& fragmentPath)
 {
      // 1. 从文件路径中获取顶点/片段着色器
     std::string vertexCode;
