@@ -336,7 +336,7 @@ int main()
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model,cubePositions[i]);
-            model = glm::rotate(model,(float)glfwGetTime() * glm::radians(20.0f * (i + 1)),glm::vec3(0.5,1.0f,0.0f));
+            model = glm::rotate(model,(float)glfwGetTime() * glm::radians(20.0f * (i % 3)),glm::vec3(0.5,1.0f,0.0f));
             glm::mat4 view = glm::mat4(1.0f); //向场景反方向移动
             view = glm::translate(view,glm::vec3(-0.0f,0.0f,-3.0f));
             glUniformMatrix4fv(glGetUniformLocation(ourShader.Program, "model"),1,GL_FALSE,glm::value_ptr(model));
