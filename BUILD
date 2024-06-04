@@ -26,6 +26,11 @@ config_setting(
     define_values = {"folder": "05_model_view_project"},
 )
 
+config_setting(
+    name = "use_folder6",
+    define_values = {"folder": "06_camera"},
+)
+
 
 # Define the glad library
 cc_library(
@@ -45,7 +50,7 @@ cc_binary(
         ":use_folder3": glob(["src/03_transfrom/*.cpp"]),
         ":use_folder4": glob(["src/04_use_plane_geometry/*.cpp"]),
         ":use_folder5": glob(["src/05_model_view_project/*.cpp"]),
-        
+        ":use_folder6": glob(["src/06_camera/*.cpp"]), 
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":lib"],
