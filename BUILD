@@ -34,12 +34,28 @@ config_setting(
 
 # Define the glad library
 cc_library(
-    name = "lib",
+    name = "glad",
     srcs = ["include/glad.c"],
     hdrs = glob(["include/*.h"]),
     includes = ["include"],  # This makes sure #include <glad/glad.h> works
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "imgui",
+    srcs = glob(["include/imgui/*.cpp"]),
+    hdrs = glob(["include/imgui/*.h"]),
+    includes = ["include"],  # This makes sure #include <glad/glad.h> works
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "geometry",
+    hdrs = glob(["include/geometry/*.h"]),
+    includes = ["include"],  # This makes sure #include <glad/glad.h> works
+    visibility = ["//visibility:public"],
+)
+
 
 # Define the main binary with conditional srcs
 cc_binary(
@@ -53,7 +69,7 @@ cc_binary(
         ":use_folder6": glob(["src/06_camera/*.cpp"]), 
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
-    deps = [":lib"],
+    deps = [":glad",":imgui",":geometry"],
     copts = [
         "-Iinclude",  # Include the "include" directory for glad and geometry
         "-I/usr/local/include",  # Include system path for glfw

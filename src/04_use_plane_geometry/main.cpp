@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
-#include "BoxGeometry.h"
+#include "geometry/BoxGeometry.h"
 
 #include <iostream>
 
