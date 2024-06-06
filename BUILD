@@ -28,8 +28,19 @@ config_setting(
 
 config_setting(
     name = "use_folder6",
-    define_values = {"folder": "06_camera"},
+    define_values = {"folder": "06_box_plan_sphere"},
 )
+
+config_setting(
+    name = "use_folder7",
+    define_values = {"folder": "07_exercise_mvp"},
+)
+
+config_setting(
+    name = "use_folder8",
+    define_values = {"folder": "08_camera"},
+)
+
 
 
 # Define the glad library
@@ -56,7 +67,6 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-
 # Define the main binary with conditional srcs
 cc_binary(
     name = "main",
@@ -66,7 +76,9 @@ cc_binary(
         ":use_folder3": glob(["src/03_transfrom/*.cpp"]),
         ":use_folder4": glob(["src/04_use_plane_geometry/*.cpp"]),
         ":use_folder5": glob(["src/05_model_view_project/*.cpp"]),
-        ":use_folder6": glob(["src/06_camera/*.cpp"]), 
+        ":use_folder6": glob(["src/06_box_plan_sphere/*.cpp"]),
+        ":use_folder7": glob(["src/07_exercise_mvp/*.cpp"]),
+        ":use_folder8": glob(["src/08_camera/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":libglad",":imgui",":geometry"],
@@ -77,15 +89,15 @@ cc_binary(
     ],
     linkopts = [
         "-L/usr/local/lib",  # Link against system libraries
-        "-lGL",
-        "-lGLU",
-        "-lglut",
+        # "-lGL",
+        # "-lGLU",
+        # "-lglut",
         "-ldl",
-        "-lGLEW",
+        # "-lGLEW",
         "-lglfw",
-        "-lX11",
+        # "-lX11",
         "-lpthread",
-        "-lXrandr",
+        # "-lXrandr",
     ],
     visibility = ["//visibility:public"],
 )
