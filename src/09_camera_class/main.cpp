@@ -3,16 +3,13 @@
 #include <iostream>
 
 #include "shader.h"
-#include "geometry/BoxGeometry.h"
-#include "geometry/PlaneGeometry.h"
-#include "geometry/SphereGeometry.h"
+#include "gui.h"
+#include "camera.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include "gui.h"
-
-#define INPUT_PATH "./src/08_camera/"
+#define INPUT_PATH "./src/09_camera_class/"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 //鼠标控制
@@ -23,9 +20,7 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 600;
 
-static glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,3.0f);
-static glm::vec3 cameraFront = glm::vec3(0.0f,0.0f,-1.0f); //便于让后面叉乘 指向自己
-static glm::vec3 cameraUp = glm::vec3(0.0f,1.0f,0.0f); //指向上天
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 float deltaTime = 0.0f; //当前针与上一针的时间差
 float lastFrame = 0.0f; //上一帧的时间
@@ -33,14 +28,8 @@ float lastFrame = 0.0f; //上一帧的时间
 //初始化鼠标位置
 static float LastX = 400;
 static float LastY = 300;
-//初始化全局变量pitch,yaw
-static float pitch = 0.0f;
-static float yaw = -90.0f;
 //初始化鼠标是否第一次进入
 bool Firsemouse = true;
-
-//初始化fow视野全局变量
-static float fov = 45.0f;
 
 using namespace std;
 
@@ -103,12 +92,70 @@ int main(int argc, char *argv[])
   //注册鼠标滚轮回调函数
   glfwSetScrollCallback(window, scroll_callback);
 
-      Shader ourShader((std::string)INPUT_PATH + "shader/vertex.glsl",
+  Shader ourShader((std::string)INPUT_PATH + "shader/vertex.glsl",
                 (std::string)INPUT_PATH + "shader/fragment.glsl");
 
-  PlaneGeometry planeGeometry(1.0, 1.0, 1.0, 1.0);
-  BoxGeometry boxGeometry(1.0, 1.0, 1.0);
-  SphereGeometry sphereGeometry(0.5, 20.0, 20.0);
+  float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+  //绑定缓冲绘制顶点
+  GLuint VBO,VAO;
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+
+  //绑定VAO
+  glBindVertexArray(VAO);
+  //绑定VBO
+  glBindBuffer(GL_ARRAY_BUFFER,VBO);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+  //设置顶点属性指针
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5 * sizeof(float),(void*)0);
+  glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,5 * sizeof(float),(void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
 
   // 生成纹理
   unsigned int texture1, texture2;
@@ -129,7 +176,7 @@ int main(int argc, char *argv[])
 
   // 加载图片
   int width, height, nrChannels;
-  unsigned char *data = stbi_load("./src/08_camera/img/container.jpg", &width, &height, &nrChannels, 0);
+  unsigned char *data = stbi_load("./src/09_camera_class/img/container.jpg", &width, &height, &nrChannels, 0);
 
   if (data)
   {
@@ -148,7 +195,7 @@ int main(int argc, char *argv[])
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   // 加载图片
-  data = stbi_load("./src/08_camera/img/awesomeface.png", &width, &height, &nrChannels, 0);
+  data = stbi_load("./src/09_camera_class/img/awesomeface.png", &width, &height, &nrChannels, 0);
 
   if (data)
   {
@@ -159,8 +206,6 @@ int main(int argc, char *argv[])
   ourShader.Use();
   ourShader.setInt("texture1", 0);
   ourShader.setInt("texture2", 1);
-
-  float factor = 0.0;
 
   glm::vec3 cubePositions[] = {
       glm::vec3(0.0f, 0.0f, 0.0f),
@@ -197,61 +242,38 @@ int main(int argc, char *argv[])
 
     ourShader.Use();
 
-    factor = glfwGetTime();
-    ourShader.setFloat("factor", -factor * 0.3);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
-    glm::mat4 view = glm::mat4(1.0f);
-    float radius = 10.0f;
-    float camX = sin(glfwGetTime()) * radius;
-    float camZ = cos(glfwGetTime()) * radius;
-    //lookat函数参数1.摄像机位置 2.目标位置 3.上向量
-    // view = glm::lookAt(glm::vec3(camX,0.0f,camZ), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    // 计算时间
     float currentTime = glfwGetTime();
     deltaTime = currentTime - lastFrame;
     lastFrame = currentTime;
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    //lookat函数参数1.摄像机位置 2.目标位置 3.上向量
+    // view = glm::lookAt(glm::vec3(camX,0.0f,camZ), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    glm::mat4 view = glm::mat4(1.0f);
+    view = camera.GetViewMatrix();
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     ourShader.setMat4("view", view);
     ourShader.setMat4("projection", projection);
 
-    glBindVertexArray(boxGeometry.VAO);
+    glBindVertexArray(VAO);
 
     for (unsigned int i = 0; i < 10; i++)
     {
       glm::mat4 model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(-55.0f), glm::vec3(1.0, 1.0, 1.0));
-      model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3));
-      float angle = 20.f * i;
-      model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+      // model = glm::scale(model, glm::vec3(1.0, 0.3, 0.5));
+
       ourShader.setMat4("model", model);
-      glDrawElements(GL_TRIANGLES, boxGeometry.indices.size(), GL_UNSIGNED_INT, 0);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(-1.0, 0.0, 0.0));
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(1.0, 0.0, 0.0));
-    ourShader.setMat4("model", model);
-
-    glBindVertexArray(planeGeometry.VAO);
-    glDrawElements(GL_TRIANGLES, planeGeometry.indices.size(), GL_UNSIGNED_INT, 0);
-
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(1.0, 0.0, 0.0));
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(1.0, 0.5, 0.5));
-    ourShader.setMat4("model", model);
-
-    glBindVertexArray(sphereGeometry.VAO);
-    glDrawElements(GL_TRIANGLES, sphereGeometry.indices.size(), GL_UNSIGNED_INT, 0);
-
     // 渲染 gui
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -259,10 +281,8 @@ int main(int argc, char *argv[])
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-
-  boxGeometry.dispose();
-  planeGeometry.dispose();
-  sphereGeometry.dispose();
+  glDeleteVertexArrays(1,&VAO);
+  glDeleteBuffers(1,&VBO);
   glfwTerminate();
 
   return 0;
@@ -279,23 +299,21 @@ void processInput(GLFWwindow *window)
   {
     glfwSetWindowShouldClose(window, true);
   }
-  float cameraSpeed = 2.5f * deltaTime;
   if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
-    cameraPos += cameraSpeed * cameraFront;
+    camera.ProcessKeyboard(FORWARD, deltaTime);
   }
   if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
   {
-    cameraPos -= cameraSpeed * cameraFront;
+    camera.ProcessKeyboard(BACKWARD, deltaTime);
   }
   if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
   {
-    //叉乘出的结果是向右，减去右向量向左移动
-    cameraPos -= glm::normalize(glm::cross(cameraFront,cameraUp)) * cameraSpeed;
+    camera.ProcessKeyboard(LEFT, deltaTime);
   }
   if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
   {
-    cameraPos += glm::normalize(glm::cross(cameraFront,cameraUp)) * cameraSpeed;
+    camera.ProcessKeyboard(RIGHT, deltaTime);
   }
 }
 
@@ -307,45 +325,14 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos)
     LastY = ypos;
     Firsemouse = false;
   }
-    float xoffset = xpos - LastX;
-    float yoffset = ypos - LastY; //这里要相反，y坐标从底部往顶部依次增大
-    LastX = xpos;
-    LastY = ypos;
-
-    float sensitivity = 0.05f; //设置鼠标灵敏度
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if(pitch >= 89.0f)
-    {
-      pitch = 89.0f;
-    }
-    if(pitch <= -89.0f)
-    {
-      pitch = -89.0f;
-    }
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+  float xoffset = xpos - LastX;
+  float yoffset = ypos - LastY; //这里要相反，y坐标从底部往顶部依次增大
+  LastX = xpos;
+  LastY = ypos;
+  camera.ProcessMouseMovement(xoffset, yoffset,true);
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
-  if(fov >= 1.0f && fov <= 45.0f)
-  {
-    fov -= yoffset;
-  }
-  if(fov < 1.0f)
-  {
-    fov = 1.0f;
-  }
-  if(fov > 45.0f)
-  {
-    fov = 45.0f;
-  }
+    camera.ProcessMouseScroll(yoffset);
 }
