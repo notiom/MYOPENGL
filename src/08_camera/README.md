@@ -20,7 +20,7 @@ lookat的三个参数分别为     ->1.摄像机位置
 blender下载链接:https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzA4MjU4MTg2Ng==&action=getalbum&album_id=3421585741472366602
 
 在x/z和y的平面如图所示:<br>
-<img src="./src/img/img3.png" height="400px" width="600px"/> 
+<img src="./src/08_camera/img/img3.png" height="400px" width="600px"/> 
 算出的方向向量的计算公式为<br>
 --y = sin(pitch)<br>
 --x = cos(pitch)<br>
@@ -28,7 +28,7 @@ blender下载链接:https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzA4MjU4MTg2Ng
 <br>
 将x，z记为d<br>
 d在x，z投影平面上如下图所示<br>
-<img src="./src/img/img3.png" height="400px" width="600px"/> 
+<img src="./src/08_camera/img/img3.png" height="400px" width="600px"/> 
 算出的方向向量的计算公式为<br>
 --y = sin(pitch)<br>
 --x = d * cos(yaw) = cos(pitch) * cos(yaw)<br>
