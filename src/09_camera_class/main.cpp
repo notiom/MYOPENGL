@@ -6,6 +6,10 @@
 #include "gui.h"
 #include "camera.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -270,6 +274,8 @@ int main(int argc, char *argv[])
       model = glm::translate(model, cubePositions[i]);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(-55.0f), glm::vec3(1.0, 1.0, 1.0));
       // model = glm::scale(model, glm::vec3(1.0, 0.3, 0.5));
+      //四元数旋转
+      // model = glm::mat4_cast(glm::qua<float>(glm::vec3(glfwGetTime(),glfwGetTime(),glfwGetTime())));
 
       ourShader.setMat4("model", model);
       glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -277,7 +283,6 @@ int main(int argc, char *argv[])
     // 渲染 gui
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
     glfwSwapBuffers(window);
     glfwPollEvents();
   }

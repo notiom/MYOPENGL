@@ -41,7 +41,15 @@ config_setting(
     define_values = {"folder": "08_camera"},
 )
 
+config_setting(
+    name = "use_folder9",
+    define_values = {"folder": "09_camera_class"},
+)
 
+config_setting(
+    name = "use_folder10",
+    define_values = {"folder": "10_light"},
+)
 
 # Define the glad library
 cc_library(
@@ -79,6 +87,8 @@ cc_binary(
         ":use_folder6": glob(["src/06_box_plan_sphere/*.cpp"]),
         ":use_folder7": glob(["src/07_exercise_mvp/*.cpp"]),
         ":use_folder8": glob(["src/08_camera/*.cpp"]),
+        ":use_folder9": glob(["src/09_camera_class/*.cpp"]),
+        ":use_folder10": glob(["src/10_light/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":libglad",":imgui",":geometry"],
