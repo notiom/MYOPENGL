@@ -66,6 +66,10 @@ config_setting(
     define_values = {"folder": "13_Materials"},
 )
 
+config_setting(
+    name = "use_folder14",
+    define_values = {"folder": "14_light_maps"},
+)
 # Define the glad library
 cc_library(
     name = "libglad",
@@ -107,6 +111,7 @@ cc_binary(
         ":use_folder11": glob(["src/11_earth_and_moon/*.cpp"]),
         ":use_folder12": glob(["src/12_basic_light/*.cpp"]),
         ":use_folder13": glob(["src/13_Materials/*.cpp"]),
+        ":use_folder14": glob(["src/14_light_maps/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":libglad",":imgui",":geometry"],
