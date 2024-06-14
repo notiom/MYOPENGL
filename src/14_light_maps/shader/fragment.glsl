@@ -3,7 +3,7 @@
 struct Material
 {
     sampler2D diffuse;
-    vec3 specular;
+    sampler2D specular;
     float shininess; //影响镜面高光的散射半径
 };
 
@@ -51,7 +51,7 @@ void main()
     // 计算反射因子
 
     float spec = pow(max(dot(viewDir, reflectDir),0.0),material.shininess);
-    vec3 specular = light.specular * (spec * material.specular);
+    vec3 specular = light.specular * spec * vec3(texture(material.specular,Texcoord));
 
     //综合最后冯氏光照结果
     vec3 result = (ambient + diffuse + specular);

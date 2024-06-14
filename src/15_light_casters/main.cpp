@@ -13,7 +13,7 @@
 #include "gui.h"
 #include "camera.h"
 
-#define INPUT_PATH "./src/14_light_maps/"
+#define INPUT_PATH "./src/15_light_casters/"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -159,6 +159,20 @@ float vertices[] = {
     ourShader.Use();
     ourShader.setInt("material.diffuse", 0);
     ourShader.setInt("material.specular", 1);
+
+    // 定义箱子派对
+    glm::vec3 cubePositions[] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f),
+    glm::vec3( 2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3( 2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3( 1.3f, -2.0f, -2.5f),
+    glm::vec3( 1.5f,  2.0f, -2.5f),
+    glm::vec3( 1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+                                };
     while (!glfwWindowShouldClose(window))
     {
 
@@ -193,11 +207,23 @@ float vertices[] = {
         ourShader.setVec3("viewPos", camera.Position);
         ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
         ourShader.setFloat("material.shininess", 64.0f);
-        ourShader.setVec3("light.position", lightPos);
+        //此处的position是固定光源的位置
+        // ourShader.setVec3("light.position", lightPos);
+        //此处的position是聚光，direction是方向向量,cutOff是切光角
+
+        ourShader.setVec3("light.position", camera.Position);
+        ourShader.setVec3("light.direction", camera.Front);
+        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+        ourShader.setFloat("light.constant",  1.0f);
+        ourShader.setFloat("light.linear",    0.09f);
+        ourShader.setFloat("light.quadratic", 0.032f);
         //改变光照的强度分量
         // ourShader.setVec3("light.ambient",  ambientColor);
         // ourShader.setVec3("light.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
         // ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        // 固定光源的方向向量，而不是位置
+        // ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
         ourShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
         ourShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // 将光照调暗了一些以搭配场景
         ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
@@ -209,12 +235,21 @@ float vertices[] = {
 
         //创建模型矩阵
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(0.5f));
-        ourShader.setMat4("model", model);
-        //绘制物体
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+
+        for(GLuint i = 0;i < 10;i++)
+        {
+            model = glm::mat4(1.0f);
+            // model = glm::rotate(model,5 * (float)glfwGetTime(),glm::vec3(1.0f,1.0f,1.0f));
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20 * i;
+            model = glm::rotate(model,glm::radians(angle),glm::vec3(1.0f,0.5f,0.2f));
+            model = glm::scale(model, glm::vec3(1.0f));
+            ourShader.setMat4("model", model);
+            //绘制物体
+            glBindVertexArray(VAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
 
         //lightShader
         //在规定使用哪个着色器程序时一定要在循环里指定，像绑定一样
