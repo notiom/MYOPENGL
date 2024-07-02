@@ -76,6 +76,11 @@ config_setting(
     define_values = {"folder": "15_light_casters"},
 )
 
+config_setting(
+    name = "use_folder16",
+    define_values = {"folder": "16_light_multipile"},
+)
+
 # Define the glad library
 cc_library(
     name = "libglad",
@@ -119,6 +124,7 @@ cc_binary(
         ":use_folder13": glob(["src/13_Materials/*.cpp"]),
         ":use_folder14": glob(["src/14_light_maps/*.cpp"]),
         ":use_folder15": glob(["src/15_light_casters/*.cpp"]),
+        ":use_folder16": glob(["src/16_light_multipile/*.cpp"]),
         "//conditions:default": [],  # Default to empty if no folder is specified
     }),
     deps = [":libglad",":imgui",":geometry"],
